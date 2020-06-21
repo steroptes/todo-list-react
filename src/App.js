@@ -1,25 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Row } from "react-bootstrap";
+import AddingTaskBlock from "./Components/AddingTaskBlock";
+import ToDoListBlock from "./Components/ToDoListBlock";
 
 function App() {
+  const [toDoList, setTodoList] = useState([]);
+  const addTask = (Task) => {
+    setTodoList([...toDoList, Task]);
+  };
+  const deleteTask = (Task) => {
+    setTodoList(toDoList.filter((el) => el.id !== Task));
+  };
+
+  const modifyTask = (modifiedTask) => {
+    setTodoList(
+      toDoList.map((el) => (el.id === modifiedTask.id ? modifiedTask : el))
+    );
+  };
+  const completeTask = (completedTask) => {
+    setTodoList(
+      toDoList.map((el) =>
+        el.id === completedTask.id
+          ? { ...completedTask, isComplete: !completedTask.isComplete }
+          : el.isComplete
+      )
+    );
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container className="App">
+      <h1 className="mt-2">ToDo List App</h1>
+      <Row>
+        <AddingTaskBlock addTask={addTask} />
+      </Row>
+      <Row>
+        <ToDoListBlock
+          toDoList={toDoList}
+          deleteTask={deleteTask}
+          modifyTask={modifyTask}
+          completeTask={completeTask}
+        />
+      </Row>
+    </Container>
   );
 }
 
